@@ -21,6 +21,10 @@ def main():
     
     joblib.dump(model, "models/linear_regression.joblib")
     print("Model saved successfully.")
+    
+    joblib.dump(le_brand, "models/le_brand.joblib")
+    joblib.dump(le_cat, "models/le_cat.joblib")
+
 
 if __name__ == "__main__":
     main()
