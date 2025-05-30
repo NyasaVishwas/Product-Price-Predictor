@@ -1,31 +1,29 @@
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder
-from sklearn.impute import SimpleImputer
+import joblib
+from src.data_loader import load_data, basic_cleaning
+from src.features import preprocess_features
 
-def preprocess_features(df):
-    """
-    Feature engineering: encode categorical variables and handle missing values
-    """
-    # Encode categorical variables
-    label_encoders = {}
-    for col in ['brand', 'main_category', 'sub_category']:
-        le = LabelEncoder()
-        df[col] = le.fit_transform(df[col].astype(str))
-        label_encoders[col] = le
+def predict(filepath, model_path='models/linear_regression.joblib'):
+    # Load new data
+    df_new = load_data(filepath)
+    df_new = basic_cleaning(df_new)
 
-    # Select relevant features
-    feature_cols = [
-        'product_rating',
-        'overall_rating',
-        'brand',
-        'main_category',
-        'sub_category'
-    ]
+    # Preprocess features
+    X_new, _ = preprocess_features(df_new)  # _ means we ignore encoders during prediction
 
-    X = df[feature_cols].copy()
+    # Load model
+    model = joblib.load(model_path)
 
-    # Impute missing values
-    imputer = SimpleImputer(strategy='mean')
-    X_imputed = imputer.fit_transform(X)
+    # Predict
+    predictions = model.predict(X_new)
 
-    return X_imputed, label_encoders  # optionally return encoders
+    # Attach predictions to dataframe
+    df_new['predicted_price'] = predictions
+
+    # Print or save predictions
+    print(df_new[['product_name', 'predicted_price']].head())
+    df_new.to_csv('data/predictions.csv', index=False)
+    print("Predictions saved to data/predictions.csv")
+
+if __name__ == "__main__":
+    predict('data/raw_data.csv')
