@@ -1,30 +1,30 @@
-from src.data_loader import load_data, basic_cleaning
-from src.features import encode_features
-from src.model import train_model, evaluate_model
+import pandas as pd
 from sklearn.model_selection import train_test_split
-import joblib
+from src.data_loader import load_data  # Assuming you have load_data in data_loader.py
+from src.features import preprocess_features
+from src.model import train_model, evaluate_model, save_model
 
 def main():
-    df = load_data("data/raw_data.csv")
-    df = basic_cleaning(df)
-    df, le_brand, le_cat = encode_features(df)
-    
-    X = df[['retail_price', 'product_rating', 'overall_rating', 'brand_encoded', 'category_encoded']]
-    y = df['discounted_price']
-    
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    
-    model = train_model(X_train, y_train)
-    mae, r2 = evaluate_model(model, X_test, y_test)
-    
-    print(f"Model evaluation - MAE: {mae}, R2: {r2}")
-    
-    joblib.dump(model, "models/linear_regression.joblib")
-    print("Model saved successfully.")
-    
-    joblib.dump(le_brand, "models/le_brand.joblib")
-    joblib.dump(le_cat, "models/le_cat.joblib")
+    # Load data
+    df = load_data('data/raw_data.csv')  # adjust path as needed
 
+    # Preprocess features
+    X, label_encoders = preprocess_features(df)
+    y = df['price']
+
+    # Split
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
+
+    # Train
+    model = train_model(X_train, y_train)
+
+    # Evaluate
+    evaluate_model(model, X_test, y_test)
+
+    # Save
+    save_model(model)
 
 if __name__ == "__main__":
     main()
