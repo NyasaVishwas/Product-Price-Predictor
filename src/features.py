@@ -1,7 +1,6 @@
 import pandas as pd
 import joblib
 from src.data_loader import load_data, basic_cleaning
-from src.features import preprocess_features
 
 def predict(filepath, model_path='models/linear_regression.joblib'):
     # Load new data
