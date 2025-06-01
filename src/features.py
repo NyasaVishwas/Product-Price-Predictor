@@ -1,10 +1,9 @@
 import pandas as pd
 import joblib
 from src.data_loader import load_data, basic_cleaning
+from sklearn.preprocessing import LabelEncoder
 
 def preprocess_features(df):
-    from sklearn.preprocessing import LabelEncoder
-
     # Encode categorical variables
     label_encoders = {}
     categorical_cols = ['main_category', 'brand']
@@ -13,30 +12,23 @@ def preprocess_features(df):
         df[col] = le.fit_transform(df[col])
         label_encoders[col] = le
 
-    # Select numerical and encoded features
+    # Select features
     feature_cols = ['product_rating', 'overall_rating', 'main_category', 'brand']
     X = df[feature_cols]
 
     return X, label_encoders
 
 def predict(filepath, model_path='models/linear_regression.joblib'):
-    # Load new data
     df_new = load_data(filepath)
     df_new = basic_cleaning(df_new)
 
-    # Preprocess features
-    X_new, _ = preprocess_features(df_new)  # _ means we ignore encoders during prediction
+    X_new, _ = preprocess_features(df_new)
 
-    # Load model
     model = joblib.load(model_path)
-
-    # Predict
     predictions = model.predict(X_new)
 
-    # Attach predictions to dataframe
     df_new['predicted_price'] = predictions
 
-    # Print or save predictions
     print(df_new[['product_name', 'predicted_price']].head())
     df_new.to_csv('data/predictions.csv', index=False)
     print("Predictions saved to data/predictions.csv")
