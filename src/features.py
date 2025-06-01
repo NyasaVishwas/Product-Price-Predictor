@@ -2,6 +2,23 @@ import pandas as pd
 import joblib
 from src.data_loader import load_data, basic_cleaning
 
+def preprocess_features(df):
+    from sklearn.preprocessing import LabelEncoder
+
+    # Encode categorical variables
+    label_encoders = {}
+    categorical_cols = ['main_category', 'brand']
+    for col in categorical_cols:
+        le = LabelEncoder()
+        df[col] = le.fit_transform(df[col])
+        label_encoders[col] = le
+
+    # Select numerical and encoded features
+    feature_cols = ['product_rating', 'overall_rating', 'main_category', 'brand']
+    X = df[feature_cols]
+
+    return X, label_encoders
+
 def predict(filepath, model_path='models/linear_regression.joblib'):
     # Load new data
     df_new = load_data(filepath)
