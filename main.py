@@ -10,10 +10,13 @@ def main():
     
     # Basic cleaning
     df = basic_cleaning(df)
-    
+
+    # Drop rows with NaN in target
+    df = df.dropna(subset=['discounted_price'])
+
     # Preprocess features
     X, label_encoders = preprocess_features(df)
-    y = df['price']
+    y = df['discounted_price']
 
     # Split
     X_train, X_test, y_train, y_test = train_test_split(
