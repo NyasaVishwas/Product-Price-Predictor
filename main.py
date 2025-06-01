@@ -2,6 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from src.data_loader import load_data, basic_cleaning
 from src.model import train_model, evaluate_model, save_model
+from src.features import preprocess_features
 
 def main():
     # Load raw data
