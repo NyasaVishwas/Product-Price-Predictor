@@ -1,8 +1,8 @@
-import numpy as np
 import joblib
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
 import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
 
 def train_model(X_train, y_train):
     model = LinearRegression()
@@ -11,28 +11,37 @@ def train_model(X_train, y_train):
 
 def evaluate_model(model, X_test, y_test):
     predictions = model.predict(X_test)
-    rmse = np.sqrt(mean_squared_error(y_test, predictions))
-    print(f"Model RMSE: {rmse:.2f}")
+    rmse = mean_squared_error(y_test, predictions, squared=False)
+    r2 = r2_score(y_test, predictions)
 
-    # Plot Residuals
+    print(f"Model RMSE: {rmse:.2f}")
+    print(f"Model R²: {r2:.2f}")
+
+    # Residual Plot
     residuals = y_test - predictions
     plt.figure(figsize=(8, 5))
-    plt.scatter(predictions, residuals, alpha=0.5)
-    plt.axhline(y=0, color='red', linestyle='--')
-    plt.xlabel('Predicted Price')
+    sns.scatterplot(x=predictions, y=residuals)
+    plt.axhline(0, color='red', linestyle='--')
+    plt.xlabel('Predicted')
     plt.ylabel('Residuals')
     plt.title('Residual Plot')
-    plt.show()
+    plt.savefig('plots/residual_plot.png')
+    plt.close()
 
-    # Plot Actual vs. Predicted
+    # Actual vs. Predicted
     plt.figure(figsize=(8, 5))
-    plt.scatter(y_test, predictions, alpha=0.5)
+    sns.scatterplot(x=y_test, y=predictions)
     plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--')
-    plt.xlabel('Actual Price')
-    plt.ylabel('Predicted Price')
-    plt.title('Actual vs. Predicted Price')
-    plt.show()
+    plt.xlabel('Actual')
+    plt.ylabel('Predicted')
+    plt.title('Actual vs. Predicted')
+    plt.savefig('plots/actual_vs_predicted.png')
+    plt.close()
 
-def save_model(model, filename='models/linear_regression.joblib'):
-    joblib.dump(model, filename)
-    print(f"Model saved to {filename}")
+    print("Evaluation plots saved to 'plots/' directory.")
+
+    return rmse, r2
+
+def save_model(model, path='models/linear_regression.joblib'):
+    joblib.dump(model, path)
+    print(f"Model saved to {path}")
