@@ -1,25 +1,37 @@
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+
+def load_data(path='data/products.csv'):
+    df = pd.read_csv(path)
+    return df
 
 def preprocess_features(df):
-    df = df.copy()
+    """
+    Select relevant features and handle missing values.
+    """
 
-    # Fill missing numerical features with median
-    for col in ['retail_price', 'discounted_price']:
-        df[col] = df[col].fillna(df[col].median())
+    # Use 'retail_price' as target since 'price' is missing
+    y = df['retail_price']
+    X = df.drop(['retail_price', 'discounted_price', 'uniq_id', 'crawl_timestamp',
+                 'product_url', 'pid', 'image', 'description', 'product_rating',
+                 'overall_rating', 'product_specifications'], axis=1)
 
-    # Select features
-    selected_features = ['retail_price', 'discounted_price', 'brand']
+    # Handle missing values
+    X = X.fillna('Unknown')
+    y = y.fillna(y.median())  # or y.mean()
 
-    # Handle missing categorical features with a placeholder
-    df['brand'] = df['brand'].fillna('Unknown')
+    # Encode 'product_category_tree' and 'brand'
+    categorical_cols = ['product_category_tree', 'brand']
+    encoder = OneHotEncoder(handle_unknown='ignore', sparse=False)
+    encoded_cats = pd.DataFrame(encoder.fit_transform(X[categorical_cols]),
+                                columns=encoder.get_feature_names_out(categorical_cols))
 
-    label_encoders = {}
-    for col in ['brand']:
-        le = LabelEncoder()
-        df[col] = le.fit_transform(df[col])
-        label_encoders[col] = le
+    X = pd.concat([X.drop(categorical_cols, axis=1).reset_index(drop=True),
+                   encoded_cats.reset_index(drop=True)], axis=1)
 
-    X = df[selected_features]
+    # Optional: scale numeric features
+    numeric_cols = X.select_dtypes(include=['float64', 'int64']).columns
+    scaler = StandardScaler()
+    X[numeric_cols] = scaler.fit_transform(X[numeric_cols])
 
-    return X, label_encoders
+    return X, y
