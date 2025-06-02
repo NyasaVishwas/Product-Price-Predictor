@@ -1,23 +1,29 @@
 import pandas as pd
 import joblib
+from src.data_loader import load_data, basic_cleaning
 from src.features import preprocess_features
 
-def predict(new_data_path, model_path='models/linear_regression.joblib'):
-    # Load the saved model
-    model = joblib.load(model_path)
-
+def predict(filepath, model_path='models/linear_regression.joblib'):
     # Load new data
-    df_new = pd.read_csv(new_data_path)
+    df_new = load_data(filepath)
+    df_new = basic_cleaning(df_new)
 
-    # Basic cleaning and preprocessing
-    X_new, label_encoders = preprocess_features(df_new)
+    # Preprocess features
+    X_new, _ = preprocess_features(df_new)
+
+    # Load model
+    model = joblib.load(model_path)
 
     # Predict
     predictions = model.predict(X_new)
 
-    # Add predictions to the dataframe
+    # Attach predictions to dataframe
     df_new['predicted_price'] = predictions
 
-    # Save results
-    df_new.to_csv('data/predicted_results.csv', index=False)
-    print("Predictions saved to data/predicted_results.csv")
+    # Print and save predictions
+    print(df_new[['product_name', 'predicted_price']].head())
+    df_new.to_csv('data/predictions.csv', index=False)
+    print("Predictions saved to data/predictions.csv")
+
+if __name__ == "__main__":
+    predict('data/raw_data.csv')

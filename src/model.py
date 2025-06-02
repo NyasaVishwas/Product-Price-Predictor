@@ -1,47 +1,41 @@
 import joblib
-import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.metrics import mean_squared_error
+import numpy as np
+import matplotlib.pyplot as plt
 
 def train_model(X_train, y_train):
+    """Train Linear Regression model."""
     model = LinearRegression()
     model.fit(X_train, y_train)
     return model
 
 def evaluate_model(model, X_test, y_test):
+    """Evaluate model performance."""
     predictions = model.predict(X_test)
-    rmse = mean_squared_error(y_test, predictions, squared=False)
-    r2 = r2_score(y_test, predictions)
-
+    rmse = np.sqrt(mean_squared_error(y_test, predictions))
     print(f"Model RMSE: {rmse:.2f}")
-    print(f"Model R²: {r2:.2f}")
 
-    # Residual Plot
+    # Plot residuals
     residuals = y_test - predictions
-    plt.figure(figsize=(8, 5))
-    sns.scatterplot(x=predictions, y=residuals)
-    plt.axhline(0, color='red', linestyle='--')
-    plt.xlabel('Predicted')
+    plt.figure(figsize=(8, 6))
+    plt.scatter(predictions, residuals, alpha=0.5)
+    plt.axhline(y=0, color='red', linestyle='--')
+    plt.xlabel('Predicted Price')
     plt.ylabel('Residuals')
-    plt.title('Residual Plot')
-    plt.savefig('plots/residual_plot.png')
-    plt.close()
+    plt.title('Residuals Plot')
+    plt.show()
 
-    # Actual vs. Predicted
-    plt.figure(figsize=(8, 5))
-    sns.scatterplot(x=y_test, y=predictions)
-    plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--')
-    plt.xlabel('Actual')
-    plt.ylabel('Predicted')
-    plt.title('Actual vs. Predicted')
-    plt.savefig('plots/actual_vs_predicted.png')
-    plt.close()
+    # Plot actual vs. predicted
+    plt.figure(figsize=(8, 6))
+    plt.scatter(y_test, predictions, alpha=0.5)
+    plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], color='red', linestyle='--')
+    plt.xlabel('Actual Price')
+    plt.ylabel('Predicted Price')
+    plt.title('Actual vs. Predicted Price')
+    plt.show()
 
-    print("Evaluation plots saved to 'plots/' directory.")
-
-    return rmse, r2
-
-def save_model(model, path='models/linear_regression.joblib'):
-    joblib.dump(model, path)
-    print(f"Model saved to {path}")
+def save_model(model, model_path='models/linear_regression.joblib'):
+    """Save the trained model."""
+    joblib.dump(model, model_path)
+    print(f"Model saved to {model_path}")
