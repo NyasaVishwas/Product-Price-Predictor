@@ -5,8 +5,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def train_model(X_train, y_train):
-    """Train RandomForest Regression model."""
-    model = RandomForestRegressor(n_estimators=100, random_state=42)
+    """Train RandomForest Regressor model."""
+    model = RandomForestRegressor(
+        n_estimators=100,  # Number of trees
+        random_state=42,
+        n_jobs=-1          # Use all CPU cores
+    )
     model.fit(X_train, y_train)
     return model
 
@@ -16,7 +20,7 @@ def evaluate_model(model, X_test, y_test):
     rmse = np.sqrt(mean_squared_error(y_test, predictions))
     print(f"Model RMSE: {rmse:.2f}")
 
-    # Residuals
+    # Plot residuals
     residuals = y_test - predictions
     plt.figure(figsize=(8, 6))
     plt.scatter(predictions, residuals, alpha=0.5)
@@ -26,7 +30,7 @@ def evaluate_model(model, X_test, y_test):
     plt.title('Residuals Plot')
     plt.show()
 
-    # Actual vs. Predicted
+    # Plot actual vs. predicted
     plt.figure(figsize=(8, 6))
     plt.scatter(y_test, predictions, alpha=0.5)
     plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], color='red', linestyle='--')
@@ -35,7 +39,7 @@ def evaluate_model(model, X_test, y_test):
     plt.title('Actual vs. Predicted Price')
     plt.show()
 
-def save_model(model, model_path='models/linear_regression.joblib'):
+def save_model(model, model_path='models/random_forest_regressor.joblib'):
     """Save the trained model."""
     joblib.dump(model, model_path)
     print(f"Model saved to {model_path}")
