@@ -9,7 +9,7 @@ def predict(filepath, model_path='models/linear_regression.joblib'):
     df_new = basic_cleaning(df_new)
 
     # Preprocess features
-    X_new, _ = preprocess_features(df_new)
+    X_new, _ = preprocess_features(df_new, fit=True)  # For production, should load encoders instead!
 
     # Load model
     model = joblib.load(model_path)
@@ -17,10 +17,10 @@ def predict(filepath, model_path='models/linear_regression.joblib'):
     # Predict
     predictions = model.predict(X_new)
 
-    # Attach predictions to dataframe
+    # Attach predictions
     df_new['predicted_price'] = predictions
 
-    # Print and save predictions
+    # Print and save
     print(df_new[['product_name', 'predicted_price']].head())
     df_new.to_csv('data/predictions.csv', index=False)
     print("Predictions saved to data/predictions.csv")
