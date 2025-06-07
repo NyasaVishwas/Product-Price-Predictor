@@ -5,14 +5,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def train_model(X_train, y_train):
-    """Train RandomForest Regressor model."""
+    """Train Random Forest Regressor model."""
     model = RandomForestRegressor(
-        n_estimators=100,  # Number of trees
+        n_estimators=100,
         random_state=42,
-        n_jobs=-1          # Use all CPU cores
+        max_depth=10,        # try different depths
+        min_samples_split=5  # minimum samples required to split
     )
     model.fit(X_train, y_train)
     return model
+
 
 def evaluate_model(model, X_test, y_test):
     """Evaluate model performance."""
