@@ -9,14 +9,18 @@ def main():
     df = load_data('data/raw_data.csv')
     df = basic_cleaning(df)
 
-    # Preprocess features and target
-    X, label_encoders = preprocess_features(df)
+    # Separate features and target
+    X = df.drop('discounted_price', axis=1)
     y = df['discounted_price']
 
     # Split data
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
+
+    # Preprocess features
+    X_train, label_encoders = preprocess_features(X_train, fit=True)
+    X_test, _ = preprocess_features(X_test, label_encoders=label_encoders, fit=False)
 
     # Train model
     model = train_model(X_train, y_train)
