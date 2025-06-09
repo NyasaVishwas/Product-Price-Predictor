@@ -1,2 +1,2 @@
 ##Product Price Predictor
-###Using E-commerce dataset
+###Using E-commerce dataset from kaggle
