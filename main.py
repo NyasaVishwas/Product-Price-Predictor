@@ -40,6 +40,12 @@ def main():
 
         logging.info("⚙️ Preprocessing features...")
         X_train, label_encoders = preprocess_features(X_train, fit=True)
+
+        # Save label encoders
+        import joblib
+        joblib.dump(label_encoders, 'models/label_encoders.joblib')
+        logging.info("💾 Label encoders saved to models/label_encoders.joblib")
+
         X_test, _ = preprocess_features(X_test, label_encoders=label_encoders, fit=False)
 
         logging.info("🔍 Starting hyperparameter tuning...")
