@@ -25,6 +25,8 @@ product-price-predictor/
 ├── models/
 │   ├── gradient_boosting.joblib
 │   └── label_encoders.joblib
+│   └── linear_regression.joblib
+│   └── random_forest_regressor.joblib
 │
 ├── src/
 │   ├── data_loader.py
