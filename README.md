@@ -15,47 +15,63 @@ Predict product prices using machine learning based on product details like name
 
 ## 📂 Project Structure
 
+```text
 product-price-predictor/
-    ├── data/
-    │   ├── raw_data.csv
-    │   └── predictions.csv
-    ├── models/
-    │   ├── gradient_boosting.joblib
-    │   └── label_encoders.joblib
-    ├── src/
-    │   ├── data_loader.py
-    │   ├── features.py
-    │   ├── model.py
-    │   └── predict.py
-    ├── main.py
-    ├── requirements.txt
-    └── README.md
+│
+├── data/
+│   ├── raw_data.csv
+│   └── predictions.csv
+│
+├── models/
+│   ├── gradient_boosting.joblib
+│   └── label_encoders.joblib
+│
+├── src/
+│   ├── data_loader.py
+│   ├── features.py
+│   ├── model.py
+│   └── predict.py
+│
+├── main.py
+├── requirements.txt
+└── README.md
+```
 
 ## 🔧 Installation
 
 1️⃣ Clone the repository:
-    git clone https://github.com/NyasaVishwas/Product-Price-Predictor.git
-    cd Product-Price-Predictor
+```bash
+git clone https://github.com/NyasaVishwas/Product-Price-Predictor.git
+cd Product-Price-Predictor
+```
 
 2️⃣ Create and activate a virtual environment:
-    python3 -m venv venv
-    source venv/bin/activate  # Mac/Linux
-    venv\Scripts\activate.bat  # Windows
+```bash
+python3 -m venv venv
+source venv/bin/activate  # Mac/Linux
+venv\Scripts\activate.bat  # Windows
+```
 
 3️⃣ Install dependencies:
-    pip install -r requirements.txt
+```bash
+pip install -r requirements.txt
+```
 
 ## 🏃‍♀️ Usage
 
-1️⃣ Train the Model:
-    python3 main.py
-    - Trains the Gradient Boosting model with hyperparameter tuning.
-    - Saves the model and label encoders to 'models/'.
+### 1️⃣ Train the Model:
+```bash
+python3 main.py
+```
+- Trains the Gradient Boosting model with hyperparameter tuning.
+- Saves the model and label encoders to `models/`.
 
-2️⃣ Predict New Data:
-    python3 -m src.predict --input data/raw_data.csv --model models/gradient_boosting.joblib --encoder models/label_encoders.joblib --output data/predictions.csv
-    - Uses saved model and label encoders to predict prices for new data.
-    - Outputs predictions to 'data/predictions.csv'.
+### 2️⃣ Predict New Data:
+```bash
+python3 -m src.predict --input data/raw_data.csv --model models/gradient_boosting.joblib --encoder models/label_encoders.joblib --output data/predictions.csv
+```
+- Uses saved model and label encoders to predict prices for new data.
+- Outputs predictions to `data/predictions.csv`.
 
 ## 📊 Results
 
@@ -69,7 +85,7 @@ Example prediction output:
 
 ## 🧩 Requirements
 
-See 'requirements.txt' for the full list.
+See `requirements.txt` for the full list.
 
 ## 📈 Future Work
 
