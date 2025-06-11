@@ -41,34 +41,34 @@ product-price-predictor/
 
 ## 🔧 Installation
 
-1️⃣ Clone the repository:
+1️ Clone the repository:
 ```bash
 git clone https://github.com/NyasaVishwas/Product-Price-Predictor.git
 cd Product-Price-Predictor
 ```
 
-2️⃣ Create and activate a virtual environment:
+2️ Create and activate a virtual environment:
 ```bash
 python3 -m venv venv
 source venv/bin/activate  # Mac/Linux
 venv\Scripts\activate.bat  # Windows
 ```
 
-3️⃣ Install dependencies:
+3️ Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
 ## 🏃‍♀️ Usage
 
-### 1️⃣ Train the Model:
+### 1️ Train the Model:
 ```bash
 python3 main.py
 ```
 - Trains the Gradient Boosting model with hyperparameter tuning.
 - Saves the model and label encoders to `models/`.
 
-### 2️⃣ Predict New Data:
+### 2️ Predict New Data:
 ```bash
 python3 -m src.predict --input data/raw_data.csv --model models/gradient_boosting.joblib --encoder models/label_encoders.joblib --output data/predictions.csv
 ```
@@ -98,4 +98,3 @@ See `requirements.txt` for the full list.
 ## 🤝 Contributing
 
 Pull requests welcome! For major changes, please open an issue first.
-
