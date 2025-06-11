@@ -13,7 +13,9 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(message)s"
 )
 
-def predict(input_file, model_path='models/gradient_boosting.joblib', output_file='data/predictions.csv'):
+def predict(input_file, model_path='models/gradient_boosting.joblib', 
+            encoder_path='models/label_encoders.joblib', 
+            output_file='data/predictions.csv'):
     """
     Load new data, preprocess features, and make predictions using a trained model.
     """
@@ -22,8 +24,11 @@ def predict(input_file, model_path='models/gradient_boosting.joblib', output_fil
         df_new = load_data(input_file)
         df_new = basic_cleaning(df_new)
 
+        logging.info("⚙️ Loading label encoders...")
+        label_encoders = joblib.load(encoder_path)
+
         logging.info("⚙️ Preprocessing features...")
-        X_new, _ = preprocess_features(df_new, fit=False)
+        X_new, _ = preprocess_features(df_new, fit=False, label_encoders=label_encoders)
 
         logging.info(f"💾 Loading model from: {model_path}")
         model = joblib.load(model_path)
@@ -59,6 +64,12 @@ def main():
         help='Path to the trained model file.'
     )
     parser.add_argument(
+        '--encoder', '-e',
+        type=str,
+        default='models/label_encoders.joblib',
+        help='Path to the saved label encoders file.'
+    )
+    parser.add_argument(
         '--output', '-o',
         type=str,
         default='data/predictions.csv',
@@ -66,7 +77,7 @@ def main():
     )
     args = parser.parse_args()
 
-    predict(args.input, model_path=args.model, output_file=args.output)
+    predict(args.input, model_path=args.model, encoder_path=args.encoder, output_file=args.output)
 
 if __name__ == "__main__":
     main()
