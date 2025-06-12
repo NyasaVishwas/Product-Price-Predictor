@@ -1,4 +1,4 @@
-# 🛍️ Product Price Predictor
+# 🛍️ Product Price Prediction
 
 Predict product prices using machine learning based on product details like name, category, brand, and other features. The model is built using Gradient Boosting Regressor with hyperparameter tuning.
 
